@@ -5,7 +5,7 @@ const sequences = [
   ["up", "right", "down", "left"], // Sequence 1
   ["down", "left", "up", "right", "down"], // Sequence 2
   ["right", "up", "down", "left", "up", "right"], // Sequence 3
-  ["left", "down-left", "up-right", "right", "left", "down-right", "up"], // Sequence 4 with diagonals
+  ["left", "down-left", "up-right", "right", "left", "down-right", "up"], // Sequence 4
 ];
 
 let userInput = [];
@@ -14,7 +14,6 @@ let currentSequenceIndex = 0;
 const thoughtBubbles = [];
 let sequenceStarted = true;
 
-// Initialize thought bubbles dynamically
 function initializeThoughtBubbles() {
   const bubbleData = [
     { modalContent: "images/d.png", top: 310, left: 1620 },
@@ -25,28 +24,19 @@ function initializeThoughtBubbles() {
 
   bubbleData.forEach((data, index) => {
     const bubble = createThoughtBubble(
-      "images/inactiveThought.png", // Default to inactive image
+      "images/inactiveThought.png",
       data.modalContent,
       data.top,
       data.left
     );
 
-    // Add the first bubble with "clickable" class (active)
-    if (index === 0) {
-      bubble.classList.add("clickable");
-      bubble.src = "images/thought.png"; // Active bubble image
-    }
-
-    // Attach click event
     bubble.onclick = () => handleThoughtBubbleClick(index);
 
-    // Append to the DOM and store for reference
     document.body.appendChild(bubble);
     thoughtBubbles.push({ element: bubble, modalContent: data.modalContent });
   });
 }
 
-// Create a single thought bubble
 function createThoughtBubble(imgSrc, modalContent, top, left) {
   const bubble = document.createElement("img");
   bubble.src = imgSrc;
@@ -54,6 +44,7 @@ function createThoughtBubble(imgSrc, modalContent, top, left) {
   bubble.style.position = "absolute";
   bubble.style.top = `${top}px`;
   bubble.style.left = `${left}px`;
+  bubble.style.display = "none";
   return bubble;
 }
 
@@ -65,7 +56,7 @@ function handleThoughtBubbleClick(index) {
     document.body.removeChild(existingModal);
   }
 
-  // Open the new modal
+  //Open modal
   showModal(thoughtBubbles[index].modalContent);
 }
 
@@ -99,7 +90,7 @@ function closeModal(modal) {
   document.body.removeChild(modal);
 }
 
-// Handle arrow input
+// arrow input
 function handleArrowClick(direction) {
   if (!sequenceStarted) return;
 
@@ -107,7 +98,7 @@ function handleArrowClick(direction) {
 
   const currentSequence = sequences[currentSequenceIndex];
 
-  // Check if the user input matches the current sequence so far
+  // Check if input matches current sequence
   if (
     userInput.join("") === currentSequence.slice(0, userInput.length).join("")
   ) {
@@ -116,48 +107,46 @@ function handleArrowClick(direction) {
       moveToNextSequence();
     }
   } else {
-    // If incorrect, reset user input and shake the arrows
+    // If incorrect, reset
     console.log("Incorrect! Try again.");
     shakeArrows();
     userInput = [];
   }
 }
 
-// Move to the next sequence
 function moveToNextSequence() {
   userInput = [];
   currentSequenceIndex++;
 
-  // If all sequences are completed
   if (currentSequenceIndex >= sequences.length) {
     alert("Congratulations! You've completed all sequences!");
     sequenceStarted = false;
 
-    // Redirect to the next page (3.html)
+    // Redirect
     window.location.href = "4.html";
     return;
   }
 
-  // Update the clickable bubble
   updateClickableBubble(currentSequenceIndex);
 }
 
-// Update which thought bubble is clickable
 function updateClickableBubble(index) {
   thoughtBubbles.forEach((bubble, i) => {
     if (i === index) {
-      // Active bubble: Add "clickable" class and set active image
+      // Active bubble
       bubble.element.classList.add("clickable");
-      bubble.element.src = "images/thought.png"; // Active bubble image
+      bubble.element.src = "images/thought.png";
+      bubble.element.style.display = "block";
     } else {
-      // Inactive bubbles: Remove "clickable" class and set inactive image
+      // Inactive bubbles
       bubble.element.classList.remove("clickable");
-      bubble.element.src = "images/inactiveThought.png"; // Inactive bubble image
+      bubble.element.src = "images/inactiveThought.png";
+      bubble.element.style.display = "none";
     }
   });
 }
 
-// Shake effect for incorrect input
+// Shake
 function shakeArrows() {
   [
     "up",
@@ -171,11 +160,13 @@ function shakeArrows() {
   ].forEach((direction) => {
     const arrow = document.getElementById(direction);
     arrow.classList.add("shake");
-    setTimeout(() => arrow.classList.remove("shake"), 500); // Remove shake after 500ms
+    arrow.classList.add("pink");
+    setTimeout(() => arrow.classList.remove("shake"), 500);
+    setTimeout(() => arrow.classList.remove("pink"), 500);
   });
 }
 
-// Add event listeners for arrows
+// Event listeners
 [
   "up",
   "right",
@@ -190,10 +181,9 @@ function shakeArrows() {
     handleArrowClick(direction);
 });
 
-// Initialize thought bubbles
 initializeThoughtBubbles();
 
-// Background music handling (optional)
+// Background music
 const backgroundMusic = new Audio("audio/background.mp3");
 backgroundMusic.loop = true;
 
@@ -214,7 +204,7 @@ window.addEventListener("beforeunload", () => {
   setCookie("musicCurrentTime", backgroundMusic.currentTime);
 });
 
-// Cookie utility functions
+// Cookie
 function setCookie(name, value) {
   document.cookie = `${name}=${value}; path=/`;
 }
@@ -230,8 +220,8 @@ function next() {
 
 function pauseBackgroundMusic() {
   backgroundMusic.pause(); // Pause the audio
-  setCookie("musicPlaybackState", "paused"); // Update the playback state cookie
-  setCookie("musicCurrentTime", backgroundMusic.currentTime); // Save the current time
+  setCookie("musicPlaybackState", "paused");
+  setCookie("musicCurrentTime", backgroundMusic.currentTime);
 }
 
 function hideModals(modalId) {
@@ -385,76 +375,76 @@ function me() {
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s8.png)";
-  }, 1500);
+  }, 2000);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s9.png)";
-  }, 2100);
+  }, 3500);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s10.png)";
-  }, 2600);
+  }, 5000);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s11.png)";
-  }, 3100);
+  }, 6000);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s12.png)";
-  }, 4100);
+  }, 8000);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s13.png)";
-  }, 5100);
+  }, 10000);
   !setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s14.png)";
-  }, 6100);
+  }, 11099);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s15.png)";
-  }, 6200);
+  }, 11100);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s16.png)";
-  }, 6300);
+  }, 11200);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s17.png)";
-  }, 6400);
+  }, 11300);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s18.png)";
-  }, 6500);
+  }, 11400);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s19.png)";
-  }, 6600);
+  }, 11500);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s20.png)";
-  }, 6700);
+  }, 11600);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s21.png)";
-  }, 6800);
+  }, 11700);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s22.png)";
-  }, 6900);
+  }, 11800);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s23.png)";
-  }, 7000);
+  }, 11900);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s24.png)";
-  }, 7100);
+  }, 12000);
   setTimeout(function () {
     document.getElementById("myDiv").style.backgroundImage =
       "url(images/HOLLY/s25.png)";
-  }, 7200);
+  }, 12100);
   setTimeout(function () {
     showModal3();
-  }, 8000);
+  }, 13000);
 }
