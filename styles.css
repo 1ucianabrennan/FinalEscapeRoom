@@ -3,7 +3,7 @@ body {
   height: 100vh;
   margin: 0;
   display: block;
-  background-image: url("images/intro.png"); /* The image used */
+  background-image: url("images/one.png"); /* The image used */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover;
