@@ -234,7 +234,7 @@ function showModal2() {
 function hideModal2() {
   document.getElementById("myModal2").style.display = "none";
   document.getElementById("inve").style.display = "flex";
-  window.location.href = "https://skelyan.github.io/WEENIES/";
+  window.location.href = "https://skelyan.github.io/final/";
 }
 
 function changeBack() {
