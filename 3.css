@@ -50,8 +50,8 @@ body {
 }
 
 .img2 {
-  width: 95px; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
+  width: 95px; 
+  height: auto;
 }
 
 
@@ -101,6 +101,7 @@ body {
   background-position: center; /* Center the image */
   z-index: -1;
 }
+
 
 /* colors */
 .black {
