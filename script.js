@@ -101,36 +101,29 @@ function handleArrowClick(direction) {
     userInput = [];
   }
 }
-// Move to the next sequence
 function moveToNextSequence() {
   userInput = [];
   currentSequenceIndex++;
-  // If all sequences are completed
   if (currentSequenceIndex >= sequences.length) {
     alert("Congratulations! You've completed all sequences!");
     sequenceStarted = false;
-    // Redirect to the next page (3.html)
     window.location.href = "4.html";
     return;
   }
-  // Update the clickable bubble
   updateClickableBubble(currentSequenceIndex);
 }
-// Update which thought bubble is clickable
 function updateClickableBubble(index) {
   thoughtBubbles.forEach((bubble, i) => {
     if (i === index) {
-      // Active bubble: Add "clickable" class and set active image
       bubble.element.classList.add("clickable");
-      bubble.element.src = "images/thought.png"; // Active bubble image
+      bubble.element.src = "images/thought.png";
     } else {
-      // Inactive bubbles: Remove "clickable" class and set inactive image
       bubble.element.classList.remove("clickable");
-      bubble.element.src = "images/inactiveThought.png"; // Inactive bubble image
+      bubble.element.src = "images/inactiveThought.png";
     }
   });
 }
-// Shake effect for incorrect input
+// Shake
 function shakeArrows() {
   [
     "up",
@@ -144,10 +137,12 @@ function shakeArrows() {
   ].forEach((direction) => {
     const arrow = document.getElementById(direction);
     arrow.classList.add("shake");
-    setTimeout(() => arrow.classList.remove("shake"), 500); // Remove shake after 500ms
+    arrow.classList.add("pink");
+    setTimeout(() => arrow.classList.remove("shake"), 500);
+    setTimeout(() => arrow.classList.remove("pink"), 500);
   });
 }
-// Add event listeners for arrows
+// Event listeners
 [
   "up",
   "right",
@@ -161,9 +156,7 @@ function shakeArrows() {
   document.getElementById(direction).onclick = () =>
     handleArrowClick(direction);
 });
-// Initialize thought bubbles
 initializeThoughtBubbles();
-// Background music handling (optional)
 const backgroundMusic = new Audio("audio/background.mp3");
 backgroundMusic.loop = true;
 const playbackState = getCookie("musicPlaybackState");
@@ -193,9 +186,9 @@ function next() {
   window.location.href = "1.html";
 }
 function pauseBackgroundMusic() {
-  backgroundMusic.pause(); // Pause the audio
-  setCookie("musicPlaybackState", "paused"); // Update the playback state cookie
-  setCookie("musicCurrentTime", backgroundMusic.currentTime); // Save the current time
+  backgroundMusic.pause();
+  setCookie("musicPlaybackState", "paused");
+  setCookie("musicCurrentTime", backgroundMusic.currentTime);
 }
 function hideModals(modalId) {
   document.getElementById(modalId).style.display = "none";
@@ -208,6 +201,8 @@ function hideModal2() {
   document.getElementById("inve").style.display = "flex";
   window.location.href = "https://skelyan.github.io/final/";
 }
+
+//////////////////////////////////////////////
 function changeBack() {
   document.getElementById("myDiv").style.backgroundImage =
     "url(images/ALEX/1.png)";
