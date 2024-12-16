@@ -1,19 +1,16 @@
 const boxImage = document.getElementById("bah");
 const thoughtBubble2 = document.getElementById("no2");
-
 const sequences = [
   ["up", "right", "down", "left"], // Sequence 1
   ["down", "left", "up", "right", "down"], // Sequence 2
   ["right", "up", "down", "left", "up", "right"], // Sequence 3
-  ["left", "down-left", "up-right", "right", "left", "down-right", "up"], // Sequence 4
+  ["left", "down-left", "up-right", "right", "left", "down-right", "up"], // Sequence 4 with diagonals
 ];
-
 let userInput = [];
 let currentSequenceIndex = 0;
-
 const thoughtBubbles = [];
 let sequenceStarted = true;
-
+// Initialize thought bubbles dynamically
 function initializeThoughtBubbles() {
   const bubbleData = [
     { modalContent: "images/d.png", top: 310, left: 1620 },
@@ -21,22 +18,26 @@ function initializeThoughtBubbles() {
     { modalContent: "images/p1.png", top: 670, left: 1630 },
     { modalContent: "images/r1.png", top: 450, left: 1600 },
   ];
-
   bubbleData.forEach((data, index) => {
     const bubble = createThoughtBubble(
-      "images/inactiveThought.png",
+      "images/inactiveThought.png", // Default to inactive image
       data.modalContent,
       data.top,
       data.left
     );
-
+    // Add the first bubble with "clickable" class (active)
+    if (index === 0) {
+      bubble.classList.add("clickable");
+      bubble.src = "images/thought.png"; // Active bubble image
+    }
+    // Attach click event
     bubble.onclick = () => handleThoughtBubbleClick(index);
-
+    // Append to the DOM and store for reference
     document.body.appendChild(bubble);
     thoughtBubbles.push({ element: bubble, modalContent: data.modalContent });
   });
 }
-
+// Create a single thought bubble
 function createThoughtBubble(imgSrc, modalContent, top, left) {
   const bubble = document.createElement("img");
   bubble.src = imgSrc;
@@ -44,10 +45,8 @@ function createThoughtBubble(imgSrc, modalContent, top, left) {
   bubble.style.position = "absolute";
   bubble.style.top = `${top}px`;
   bubble.style.left = `${left}px`;
-  bubble.style.display = "none";
   return bubble;
 }
-
 function handleThoughtBubbleClick(index) {
   // Close existing modal if open
   const existingModal = document.querySelector(".intro-modal");
@@ -55,50 +54,39 @@ function handleThoughtBubbleClick(index) {
     existingModal.style.display = "none";
     document.body.removeChild(existingModal);
   }
-
-  //Open modal
+  // Open the new modal
   showModal(thoughtBubbles[index].modalContent);
 }
-
 // Show modal
 function showModal(contentSrc) {
   const modal = document.createElement("div");
   modal.classList.add("intro-modal");
   modal.style.display = "block";
-
   const modalContent = document.createElement("div");
   modalContent.classList.add("intro-modal-content");
-
   const img = document.createElement("img");
   img.src = contentSrc;
   img.classList.add("modal-image");
   modalContent.appendChild(img);
-
   const closeButton = document.createElement("button");
   closeButton.classList.add("intro-modal-close");
   closeButton.innerText = "X";
   closeButton.onclick = () => closeModal(modal);
-
   modalContent.appendChild(closeButton);
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
 }
-
 // Close modal
 function closeModal(modal) {
   modal.style.display = "none";
   document.body.removeChild(modal);
 }
-
-// arrow input
+// Handle arrow input
 function handleArrowClick(direction) {
   if (!sequenceStarted) return;
-
   userInput.push(direction);
-
   const currentSequence = sequences[currentSequenceIndex];
-
-  // Check if input matches current sequence
+  // Check if the user input matches the current sequence so far
   if (
     userInput.join("") === currentSequence.slice(0, userInput.length).join("")
   ) {
@@ -107,46 +95,42 @@ function handleArrowClick(direction) {
       moveToNextSequence();
     }
   } else {
-    // If incorrect, reset
+    // If incorrect, reset user input and shake the arrows
     console.log("Incorrect! Try again.");
     shakeArrows();
     userInput = [];
   }
 }
-
+// Move to the next sequence
 function moveToNextSequence() {
   userInput = [];
   currentSequenceIndex++;
-
+  // If all sequences are completed
   if (currentSequenceIndex >= sequences.length) {
     alert("Congratulations! You've completed all sequences!");
     sequenceStarted = false;
-
-    // Redirect
+    // Redirect to the next page (3.html)
     window.location.href = "4.html";
     return;
   }
-
+  // Update the clickable bubble
   updateClickableBubble(currentSequenceIndex);
 }
-
+// Update which thought bubble is clickable
 function updateClickableBubble(index) {
   thoughtBubbles.forEach((bubble, i) => {
     if (i === index) {
-      // Active bubble
+      // Active bubble: Add "clickable" class and set active image
       bubble.element.classList.add("clickable");
-      bubble.element.src = "images/thought.png";
-      bubble.element.style.display = "block";
+      bubble.element.src = "images/thought.png"; // Active bubble image
     } else {
-      // Inactive bubbles
+      // Inactive bubbles: Remove "clickable" class and set inactive image
       bubble.element.classList.remove("clickable");
-      bubble.element.src = "images/inactiveThought.png";
-      bubble.element.style.display = "none";
+      bubble.element.src = "images/inactiveThought.png"; // Inactive bubble image
     }
   });
 }
-
-// Shake
+// Shake effect for incorrect input
 function shakeArrows() {
   [
     "up",
@@ -160,13 +144,10 @@ function shakeArrows() {
   ].forEach((direction) => {
     const arrow = document.getElementById(direction);
     arrow.classList.add("shake");
-    arrow.classList.add("pink");
-    setTimeout(() => arrow.classList.remove("shake"), 500);
-    setTimeout(() => arrow.classList.remove("pink"), 500);
+    setTimeout(() => arrow.classList.remove("shake"), 500); // Remove shake after 500ms
   });
 }
-
-// Event listeners
+// Add event listeners for arrows
 [
   "up",
   "right",
@@ -180,13 +161,11 @@ function shakeArrows() {
   document.getElementById(direction).onclick = () =>
     handleArrowClick(direction);
 });
-
+// Initialize thought bubbles
 initializeThoughtBubbles();
-
-// Background music
+// Background music handling (optional)
 const backgroundMusic = new Audio("audio/background.mp3");
 backgroundMusic.loop = true;
-
 const playbackState = getCookie("musicPlaybackState");
 if (playbackState === "playing") {
   const currentTime = parseFloat(getCookie("musicCurrentTime"));
@@ -195,7 +174,6 @@ if (playbackState === "playing") {
 } else {
   backgroundMusic.play();
 }
-
 window.addEventListener("beforeunload", () => {
   setCookie(
     "musicPlaybackState",
@@ -203,31 +181,25 @@ window.addEventListener("beforeunload", () => {
   );
   setCookie("musicCurrentTime", backgroundMusic.currentTime);
 });
-
-// Cookie
+// Cookie utility functions
 function setCookie(name, value) {
   document.cookie = `${name}=${value}; path=/`;
 }
-
 function getCookie(name) {
   const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
   return match ? match[1] : null;
 }
-
 function next() {
   window.location.href = "1.html";
 }
-
 function pauseBackgroundMusic() {
   backgroundMusic.pause(); // Pause the audio
-  setCookie("musicPlaybackState", "paused");
-  setCookie("musicCurrentTime", backgroundMusic.currentTime);
+  setCookie("musicPlaybackState", "paused"); // Update the playback state cookie
+  setCookie("musicCurrentTime", backgroundMusic.currentTime); // Save the current time
 }
-
 function hideModals(modalId) {
   document.getElementById(modalId).style.display = "none";
 }
-
 function showModal2() {
   document.getElementById("myModal2").style.display = "flex";
 }
@@ -236,7 +208,6 @@ function hideModal2() {
   document.getElementById("inve").style.display = "flex";
   window.location.href = "https://skelyan.github.io/final/";
 }
-
 function changeBack() {
   document.getElementById("myDiv").style.backgroundImage =
     "url(images/ALEX/1.png)";
